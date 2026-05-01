@@ -71,9 +71,13 @@ def banner_grab(ip, porta, timeout=2):
         with socket.create_connection((ip, porta), timeout=timeout) as s:
             if porta in [80, 8080, 8443, 443]:
                 s.sendall(b"HEAD / HTTP/1.0\r\n\r\n")
-                banner_raw = s.recv(256).decode(errors="replace").strip()
-                banner = ''.join(c for c in banner_raw if c.isprintable())
-            return banner[:80] if banner else None
+            banner_raw = s.recv(256).decode(errors="replace").strip()
+            banner = ''.join(c for c in banner_raw if (c.isprintable() or c == '\n') and c != '\ufffd')
+            banner = banner.replace('\r', '').strip()
+            banner = banner.split('\n')[0].strip()
+            if not banner or len(banner) <= 1:
+                banner = "[banner binario - negociacao de protocolo]"
+            return banner[:120]
     except Exception:
         return None
 
@@ -95,7 +99,8 @@ def exibir_resultados(resultados):
             servico = SERVICOS.get(p, "desconhecido")
             alerta  = RISCO.get(p, "")
             banner  = host["banners"].get(p, "")
-
+            if not alerta:
+                alerta = "Sem risco mapeado"
             if "CRITICO" in alerta:
                 flag = "[!]"
                 total_criticos += 1
@@ -119,9 +124,9 @@ def main():
     args = parser.parse_args()
 
     print("\nnet_recon.py | ARP . SYN Scan . Banner Grab")
-    print("-" * 30)
+    print("_" * 50)
     print("  uso restrito a ambientes autorizados.")
-    print("-" * 30)
+    print("_" * 50)
 
     try:
         rede = ipaddress.ip_network(args.rede, strict=False)
