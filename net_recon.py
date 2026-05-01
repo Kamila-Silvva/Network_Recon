@@ -111,13 +111,13 @@ def exibir_resultados(resultados):
     print(f"  {total_criticos} critico(s)  |  {total_avisos} aviso(s)")
 
 def main():
-    parser = argparse.ArgumentParser(description="net_recon — ARP · SYN · Banner")
+    parser = argparse.ArgumentParser(description="net_recon - ARP . SYN . Banner")
     parser.add_argument("rede",        help="ex: 192.168.1.0/24")
     parser.add_argument("--portas",    nargs="+", type=int)
     parser.add_argument("--iface",     help="interface de rede (ex: br-a1131ff3806e)")
     args = parser.parse_args()
 
-    print("\nnet_recon.py | ARP · SYN Scan · Banner Grab")
+    print("\nnet_recon.py | ARP . SYN Scan . Banner Grab")
     print("-" * 30)
     print("  uso restrito a ambientes autorizados.")
     print("-" * 30)
