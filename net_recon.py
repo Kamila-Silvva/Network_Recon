@@ -71,7 +71,8 @@ def banner_grab(ip, porta, timeout=2):
         with socket.create_connection((ip, porta), timeout=timeout) as s:
             if porta in [80, 8080, 8443, 443]:
                 s.sendall(b"HEAD / HTTP/1.0\r\n\r\n")
-            banner = s.recv(256).decode(errors="replace").strip()
+                banner_raw = s.recv(256).decode(errors="replace").strip()
+                banner = ''.join(c for c in banner_raw if c.isprintable())
             return banner[:80] if banner else None
     except Exception:
         return None
